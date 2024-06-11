@@ -5,6 +5,13 @@ import config from "../conf/index.js";
 function getCityFromURL(search) {
   // TODO: MODULE_ADVENTURES
   // 1. Extract the city id from the URL's Query Param and return it
+  const params = new URLSearchParams(search);
+  
+  const city = params.get('city');
+  
+  // console.log(city);
+
+  return city;
 
 }
 
@@ -12,6 +19,20 @@ function getCityFromURL(search) {
 async function fetchAdventures(city) {
   // TODO: MODULE_ADVENTURES
   // 1. Fetch adventures using the Backend API and return the data
+  try {
+    let response = await fetch(`${config.backendEndpoint}/adventures?city=${city}`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    let adventures = await response.json();
+    return adventures;
+
+  } catch (error) {
+    console.error("Error fetching cities:", error);
+    return null; 
+  }
 
 }
 
@@ -19,6 +40,40 @@ async function fetchAdventures(city) {
 function addAdventureToDOM(adventures) {
   // TODO: MODULE_ADVENTURES
   // 1. Populate the Adventure Cards and insert those details into the DOM
+  if (adventures) {
+    adventures.forEach((key) => {
+      
+      const adventureCard = document.createElement("div");
+      adventureCard.className = "col-6 col-lg-3 mb-3"; // Bootstrap classes for responsiveness
+
+      const adventureLink = document.createElement("a");
+      adventureLink.href = `detail/?adventure=${key.id}`;
+      adventureLink.id = key.id; 
+
+      adventureLink.innerHTML = `
+      <div class="activity-card">
+        <img src="${key.image}" class="activity-card img" alt="${key.category}">
+        <div class="adventure-detail-card">
+          <div class="d-flex justify-content-between">
+              <h6>${key.name}</h6>
+              <h6>${key.costPerHead}</h6>
+          </div>
+          <div class="d-flex justify-content-between">
+              <h6>Duration</h6>
+              <h6>${key.duration} Hours</h6>
+          </div>
+        </div>
+        <p class="category-banner">${key.category}</p>
+      </div>
+      `;    
+
+      adventureCard.appendChild(adventureLink);
+
+      const dataContainer = document.getElementById("data");
+      dataContainer.appendChild(adventureCard);
+
+    });
+  }
 
 }
 
