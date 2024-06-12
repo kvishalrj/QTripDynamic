@@ -140,11 +140,11 @@ footer {
 /* activity-detail page css */
 
 .adventure-detail-card {
-  width: 100%;
   border: 1px solid #eee;
   border-radius: 4px;
   padding: 16px;
   /* margin: 8px; */
+  width: 100%;
 }
 
 .activity-card-image {
